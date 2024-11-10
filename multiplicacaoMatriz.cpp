@@ -5,7 +5,7 @@
 #include <iomanip> // Para formatar a saída
 using namespace std;
 void inserirDados(int **matriz, int linha, int coluna);
-void printMatrix(int **matriz, int linha, int coluna);
+void printMatriz(int **matriz, int linha, int coluna);
 void multiplicacaoMatrizSequencial(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoSequencial );
 void multiplicacaoMatrizParallel(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoParalelizado );
 int** criarMatrizDinamica(int linha, int coluna);
@@ -43,18 +43,18 @@ int main()
 
         //cout << "Matrix A:" << endl;
         inserirDados(matrizA, linhaA, colunaA);
-        //printMatrix(matrixA, linhaA, colunaA);
+        //printMatriz(matrizA, linhaA, colunaA);
         //cout << "Matrix B:" << endl;
         inserirDados(matrizB, linhaB, colunaB);
-        //printMatrix(matrixB, linhaB, colunaB);
+        //printMatriz(matrizB, linhaB, colunaB);
         
         //cout << "Matrix C Sequencial:" << endl;
         multiplicacaoMatrizSequencial(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoSequencial);
-        //printMatrix(matrixC, linhaA, colunaB);
+        //printMatriz(matrizC, linhaA, colunaB);
         
         //cout << "Matrix C Paralelizada:" << endl;
         multiplicacaoMatrizParallel(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoParalelizado);
-        //printMatrix(matrixC, linhaA, colunaB);
+        //printMatriz(matrizC, linhaA, colunaB);
 
         cout << "Matriz A[" << linhaA << "][" << colunaA << "] * Matriz B[" << linhaB << "][" << colunaB << "] = Matriz C [" << linhaA << "][" << colunaB << "]" << endl;
         cout << "--Resultados Obtiditos--" << endl;
@@ -66,14 +66,17 @@ int main()
         
         
 
-        cout << fixed << setprecision(3); 
-        cout << "Com Sequencial   " << fixed << setprecision(3) 
-        << (int)(tempoSequencial / 60) << "m " 
-        << (int)(tempoSequencial) % 60 << "s" << endl;
+    cout << fixed << setprecision(3); 
+    cout << "Com Sequencial   " 
+     << (int)(tempoSequencial / 60) << "m " 
+     << (int)(tempoSequencial) % 60 << "s "
+     << fixed << setprecision(3) << (tempoSequencial * 1000) << "ms" << endl;
 
-        cout << "Com Paralelizada " << fixed << setprecision(3) 
-        << (int)(tempoParalelizado / 60) << "m " 
-        << (int)(tempoParalelizado) % 60 << "s" << endl;
+    cout << "Com Paralelizada " 
+     << (int)(tempoParalelizado / 60) << "m " 
+     << (int)(tempoParalelizado) % 60 << "s "
+     << fixed << setprecision(3) << (tempoParalelizado * 1000) << "ms" << endl;
+
 
         cout << aceleracaoObtida << " vezes mais rapido que a sequencial" << endl;
         
