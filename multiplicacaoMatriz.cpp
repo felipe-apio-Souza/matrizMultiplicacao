@@ -6,30 +6,39 @@
 using namespace std;
 void inserirDados(int **matriz, int linha, int coluna);
 void printMatrix(int **matriz, int linha, int coluna);
-void multiplicacaoMatrixSequencial(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoSequencial );
-void multiplicacaoMatrixParallel(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoParalelizado );
-int** criarMatrixDinamica(int linha, int coluna);
-void deletaMatrixDinamica(int** matriz, int linha);
+void multiplicacaoMatrizSequencial(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoSequencial );
+void multiplicacaoMatrizParallel(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoParalelizado );
+int** criarMatrizDinamica(int linha, int coluna);
+void deletaMatrizDinamica(int** matriz, int linha);
 void iniciarZerada(int** matriz, int linha, int coluna);
 int main()
 {
     double tempoSequencial, tempoParalelizado;
     int linhaA, colunaA, linhaB, colunaB;
 
-    cout << "Tamanho da Matriz: ";
+    cout << "Linha da Matriz A: ";
     cin >> linhaA;
     cout << endl;
 
-    colunaA = linhaA;
-    colunaB = linhaA;
-    linhaB = linhaA;
+    cout << "Coluna da Matriz A: ";
+    cin >> colunaA;
+    cout << endl;
+
+    cout << "Linha da Matriz B: ";
+    cin >> linhaB;
+    cout << endl;
+
+    cout << "Coluna da Matriz B: ";
+    cin >> colunaB;
+    cout << endl;
+
      
 
 
     if(colunaA == linhaB){
-        int** matrizA = criarMatrixDinamica(linhaA, colunaA);
-        int** matrizB = criarMatrixDinamica(linhaB, colunaB);
-        int** matrizC = criarMatrixDinamica(linhaA, colunaB);
+        int** matrizA = criarMatrizDinamica(linhaA, colunaA);
+        int** matrizB = criarMatrizDinamica(linhaB, colunaB);
+        int** matrizC = criarMatrizDinamica(linhaA, colunaB);
 
 
         //cout << "Matrix A:" << endl;
@@ -40,11 +49,11 @@ int main()
         //printMatrix(matrixB, linhaB, colunaB);
         
         //cout << "Matrix C Sequencial:" << endl;
-        multiplicacaoMatrixSequencial(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoSequencial);
+        multiplicacaoMatrizSequencial(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoSequencial);
         //printMatrix(matrixC, linhaA, colunaB);
         
         //cout << "Matrix C Paralelizada:" << endl;
-        multiplicacaoMatrixParallel(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoParalelizado);
+        multiplicacaoMatrizParallel(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoParalelizado);
         //printMatrix(matrixC, linhaA, colunaB);
 
         cout << "Matriz A[" << linhaA << "][" << colunaA << "] * Matriz B[" << linhaB << "][" << colunaB << "] = Matriz C [" << linhaA << "][" << colunaB << "]" << endl;
@@ -68,9 +77,9 @@ int main()
 
         cout << aceleracaoObtida << " vezes mais rapido que a sequencial" << endl;
         
-        deletaMatrixDinamica(matrizA, linhaA);
-        deletaMatrixDinamica(matrizB, linhaB);
-        deletaMatrixDinamica(matrizC, linhaA);
+        deletaMatrizDinamica(matrizA, linhaA);
+        deletaMatrizDinamica(matrizB, linhaB);
+        deletaMatrizDinamica(matrizC, linhaA);
     }else{
         cout << "nao atende aos requisitos para realizar a multiplicacao" << endl;
     }
@@ -78,7 +87,7 @@ int main()
     return 0;
 }
 
-int** criarMatrixDinamica(int linha, int coluna){
+int** criarMatrizDinamica(int linha, int coluna){
     int** matriz = new int*[linha];
     for(int i =0; i<linha; i++){
         matriz[i] = new int[coluna];
@@ -86,7 +95,7 @@ int** criarMatrixDinamica(int linha, int coluna){
     return matriz;
 }
 
-void deletaMatrixDinamica(int** matriz, int linha){
+void deletaMatrizDinamica(int** matriz, int linha){
     for(int i = 0; i < linha; i++){
         delete[] matriz[i];
     }
@@ -102,7 +111,7 @@ void inserirDados(int** matriz, int linha, int coluna){
     }
 }
 
-void printMatrix(int **matriz, int linha, int coluna){
+void printMatriz(int **matriz, int linha, int coluna){
     for(int i = 0; i < linha; i++){
         for(int j = 0; j < coluna; j++){
             cout << matriz[i][j] << "  ";
@@ -111,7 +120,7 @@ void printMatrix(int **matriz, int linha, int coluna){
     }
 }
 
-void multiplicacaoMatrixSequencial(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoSequencial ){
+void multiplicacaoMatrizSequencial(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoSequencial ){
     double  comeco, fim, execucao;
     iniciarZerada(matrizC, linhaA, colunaB);
     comeco = omp_get_wtime();
@@ -129,7 +138,7 @@ void multiplicacaoMatrixSequencial(int **matrizA, int **matrizB, int **matrizC, 
     tempoSequencial = fim - comeco; 
 }
 
-void multiplicacaoMatrixParallel(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoParalelizado ){
+void multiplicacaoMatrizParallel(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoParalelizado ){
     double  comeco, fim, execucao;
     //omp_set_num_threads(12);
     //#pragma omp parallel num_threads(12); 
