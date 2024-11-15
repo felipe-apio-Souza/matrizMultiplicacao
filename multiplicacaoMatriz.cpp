@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <omp.h> 
-#include <iomanip> // Para formatar a saída
+#include <iomanip> 
 using namespace std;
 void inserirDados(int **matriz, int linha, int coluna);
 void printMatriz(int **matriz, int linha, int coluna);
@@ -41,20 +41,20 @@ int main()
         int** matrizC = criarMatrizDinamica(linhaA, colunaB);
 
 
-        //cout << "Matrix A:" << endl;
+        cout << "Matrix A:" << endl;
         inserirDados(matrizA, linhaA, colunaA);
-        //printMatriz(matrizA, linhaA, colunaA);
-        //cout << "Matrix B:" << endl;
+        printMatriz(matrizA, linhaA, colunaA);
+        cout << "Matrix B:" << endl;
         inserirDados(matrizB, linhaB, colunaB);
-        //printMatriz(matrizB, linhaB, colunaB);
+        printMatriz(matrizB, linhaB, colunaB);
         
-        //cout << "Matrix C Sequencial:" << endl;
+        cout << "Matrix C Sequencial:" << endl;
         multiplicacaoMatrizSequencial(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoSequencial);
-        //printMatriz(matrizC, linhaA, colunaB);
+        printMatriz(matrizC, linhaA, colunaB);
         
-        //cout << "Matrix C Paralelizada:" << endl;
+        cout << "Matrix C Paralelizada:" << endl;
         multiplicacaoMatrizParallel(matrizA, matrizB, matrizC, linhaA, colunaA, linhaB, colunaB, tempoParalelizado);
-        //printMatriz(matrizC, linhaA, colunaB);
+        printMatriz(matrizC, linhaA, colunaB);
 
         cout << "Matriz A[" << linhaA << "][" << colunaA << "] * Matriz B[" << linhaB << "][" << colunaB << "] = Matriz C [" << linhaA << "][" << colunaB << "]" << endl;
         cout << "--Resultados Obtiditos--" << endl;
@@ -125,14 +125,12 @@ void printMatriz(int **matriz, int linha, int coluna){
 
 void multiplicacaoMatrizSequencial(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoSequencial ){
     double  comeco, fim, execucao;
-    iniciarZerada(matrizC, linhaA, colunaB);
     comeco = omp_get_wtime();
     for (int i = 0; i < linhaA; i++) {
         for (int j = 0; j < colunaB; j++) {
             int local_sum = 0;
             for (int k = 0; k < colunaA; k++) {
                 local_sum += matrizA[i][k] * matrizB[k][j];
-                //matrixC[i][j] += matrixA[i][k] * matrixB[k][j];
             }
             matrizC[i][j] = local_sum;
         }
@@ -143,10 +141,8 @@ void multiplicacaoMatrizSequencial(int **matrizA, int **matrizB, int **matrizC, 
 
 void multiplicacaoMatrizParallel(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoParalelizado ){
     double  comeco, fim, execucao;
-    //omp_set_num_threads(12);
-    //#pragma omp parallel num_threads(12); 
+    omp_set_num_threads(8);
     
-    iniciarZerada(matrizC, linhaA, colunaB);
     comeco = omp_get_wtime();
     #pragma omp parallel for
     for (int i = 0; i < linhaA; i++) {
@@ -154,7 +150,6 @@ void multiplicacaoMatrizParallel(int **matrizA, int **matrizB, int **matrizC, in
             int local_sum = 0;
             for (int k = 0; k < colunaA; k++) {
                 local_sum += matrizA[i][k] * matrizB[k][j];
-                //matrixC[i][j] += matrixA[i][k] * matrixB[k][j];
             }
             matrizC[i][j] = local_sum;
         }
@@ -163,11 +158,4 @@ void multiplicacaoMatrizParallel(int **matrizA, int **matrizB, int **matrizC, in
     tempoParalelizado = fim - comeco;
 }
 
-void iniciarZerada(int** matriz, int linha, int coluna){
-    for(int i = 0; i < linha; i++){
-        for(int j = 0; j < coluna; j++){
-            matriz[i][j] = 0;
-        }
-    }
-}
 
