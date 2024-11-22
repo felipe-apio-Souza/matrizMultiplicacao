@@ -1,6 +1,5 @@
 #include <iostream>
 #include <time.h>
-#include <stdlib.h>
 #include <omp.h> 
 #include <iomanip> 
 using namespace std;
@@ -91,7 +90,7 @@ void inserirDados(int** matriz, int linha, int coluna){
 }
 
 void multiplicacaoMatrizSequencial(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoSequencial ){
-    double  comeco, fim, execucao;
+    double  comeco, fim;
     comeco = omp_get_wtime();
     for (int i = 0; i < linhaA; i++) {
         for (int j = 0; j < colunaB; j++) {
@@ -107,9 +106,8 @@ void multiplicacaoMatrizSequencial(int **matrizA, int **matrizB, int **matrizC, 
 }
 
 void multiplicacaoMatrizParallel(int **matrizA, int **matrizB, int **matrizC, int linhaA, int colunaA, int linhaB, int colunaB, double &tempoParalelizado ){
-    double  comeco, fim, execucao;
+    double  comeco, fim;
     omp_set_num_threads(8);
-    
     comeco = omp_get_wtime();
     #pragma omp parallel for
     for (int i = 0; i < linhaA; i++) {
